@@ -1,10 +1,12 @@
 #TODO:
 	svr_probe2
 	probe.log 分离
+	post重试可以依赖ons自身的重试机制
 	
 
 树熊服务器在5秒内(之后会根据数据包的大小动态调整)收不到响应会断掉连接, 考虑到我们的业务场景, 允许一定的数据丢失, 所以失败后树熊不会发起重试(不排除后期加上重试机制的可能).
 由于重试机制依赖于第三方的响应, 因此树熊并不能保证无重复的数据包.
+数据统一使用utf-8编码
 
 ### Get Started
 * 向树熊索要token.
@@ -14,11 +16,14 @@
 ### 数据包格式
 |参数|说明|
 |---|----|
+|version|协议版本号,当前1.0|
 |command|命令类型|
 |timestamp| 为后续抵抗重放攻击提供可能|
 |nonce| 随机数, 防重放攻击|
-|signature|加密/校验流程如下：<ul><li>1. 将token、timestamp、nonce三个参数进行字典序排序</li><li>2. 将三个参数字符串拼接成一个字符串进行sha1加密</li><li>3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于微信</li></ul>|
-|probeData|格式参见附件|
+|signature|加密/校验流程如下：<ul><li>1. 将token、timestamp、nonce三个参数进行字典序排序</li><li>2. 将三个参数字符串拼接成一个字符串进行sha1加密</li><li>3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于树熊</li></ul>|
+|probeMac|探针mac|
+|probeSn|探针序列号, 如3041158L01FA|
+|probeData|实际的payload,包含该探针下探测到的设备mac,格式参见附件|
 
 ### 回复的格式
 |参数|说明|
@@ -68,22 +73,21 @@
 
 ```
 	[
-		{probeMac},
-		{probeMac},
+		{devMac},
+		{devMac},
 		...,
-		{probeMac}
+		{devMac}
 	]
 ```
 
-* probeMac
+* devMac(设备mac)
 
 
 ``` 
 	{
-		"probeMac":"00:00:00:00:00:00",
-		"devMac":"00:00:00:00:00:00",
-		"probeSN":"3041158L01FA",
-		"timeStamp":1446010565999,
+		"devMac":"00:00:00:00:00:00", //设备mac
+		"rssi": -55 //信号强度
+		"timeStamp":1446010565999, //探测这条消息时的时间戳
 		...更多列
 	}
 ```
