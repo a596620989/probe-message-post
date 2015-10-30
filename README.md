@@ -2,6 +2,7 @@
 	svr_probe2
 	probe.log 分离
 	post重试可以依赖ons自身的重试机制
+	开发一套第三方的调试界面
 	
 
 树熊服务器在5秒内(之后会根据数据包的大小动态调整)收不到响应会断掉连接, 考虑到我们的业务场景, 允许一定的数据丢失, 所以失败后树熊不会发起重试(不排除后期加上重试机制的可能).
@@ -17,7 +18,7 @@
 |参数|说明|
 |---|----|
 |version|协议版本号,当前1.0|
-|command|命令类型|
+|method|方法, 如treebear.probedata.post|
 |timestamp| 为后续抵抗重放攻击提供可能|
 |nonce| 随机数, 防重放攻击|
 |signature|加密/校验流程如下：<ul><li>1. 将token、timestamp、nonce三个参数进行字典序排序</li><li>2. 将三个参数字符串拼接成一个字符串进行sha1加密</li><li>3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于树熊</li></ul>|
@@ -44,7 +45,6 @@
 
 
 ### 第三方如何测试?
-	TODO:开发一套第三方的调试界面
 	调试时的token咋办?
 	
 	https://mp.weixin.qq.com/debug/cgi-bin/apiinfo?t=index&type=%E6%B6%88%E6%81%AF%E6%8E%A5%E5%8F%A3%E8%B0%83%E8%AF%95&form=%E4%BA%8B%E4%BB%B6%E6%B6%88%E6%81%AF

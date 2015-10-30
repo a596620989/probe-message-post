@@ -1,6 +1,5 @@
-package com.eros.ons;
+package com.witown.open.probe;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -33,14 +31,19 @@ import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
 
-public class ConsumerTest {
+/**
+ * 一个topic可以被多个消费者实例消费, 对应于我们的情况会是一台服务器一个消费者实例
+ * @author eros
+ *
+ */
+public class ConsumerClient {
 	public static void main(String[] args) {
 		Properties properties = new Properties();
 		properties.put(PropertyKeyConst.ConsumerId, "CID_1002");
 		properties.put(PropertyKeyConst.AccessKey, "0XznofrZlweGBMOW");
 		properties.put(PropertyKeyConst.SecretKey, "szjziLTxr9NZAXVOcYGsgBKOY4ENan");
 		/**
-         * 设置消费端线程数固定为20
+         * 设置消费端线程数, 阿里云默认值为20
          */
 //        properties.put(PropertyKeyConst.ConsumeThreadNums,20);
 		properties.put(PropertyKeyConst.MessageModel,
