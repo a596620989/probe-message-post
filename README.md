@@ -112,5 +112,4 @@ api和安全相关的代码应该分开. 比如用interceptor
         responseText(echostr);
     }
     
-    
-            
+![image](https://github.com/a596620989/treebear-message-api/img/probe-message-post.jpg) 
