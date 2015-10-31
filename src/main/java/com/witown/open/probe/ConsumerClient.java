@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -21,6 +23,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
@@ -30,6 +34,9 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
+import com.witown.dao.OpenThirdInfoMapper;
+import com.witown.entity.OpenThirdInfo;
+import com.witown.entity.OpenThirdInfoExample;
 
 /**
  * 一个topic可以被多个消费者实例消费, 对应于我们的情况会是一台服务器一个消费者实例
@@ -37,7 +44,18 @@ import com.aliyun.openservices.ons.api.PropertyValueConst;
  *
  */
 public class ConsumerClient {
-	public static void main(String[] args) {
+	
+//	@Autowired
+	private OpenThirdInfoMapper openThirdInfoMapper;
+	
+	protected static Logger            logger           = LoggerFactory.getLogger(ConsumerClient.class); 
+	
+	/**
+	 * 当容器启动时自动执行
+	 */
+	@PostConstruct
+	public void startup(){
+
 		Properties properties = new Properties();
 		properties.put(PropertyKeyConst.ConsumerId, "CID_1002");
 		properties.put(PropertyKeyConst.AccessKey, "0XznofrZlweGBMOW");
@@ -45,23 +63,21 @@ public class ConsumerClient {
 		/**
          * 设置消费端线程数, 阿里云默认值为20
          */
-//        properties.put(PropertyKeyConst.ConsumeThreadNums,20);
+        properties.put(PropertyKeyConst.ConsumeThreadNums,20);
 		properties.put(PropertyKeyConst.MessageModel,
 				 PropertyValueConst.CLUSTERING);
 		Consumer consumer = ONSFactory.createConsumer(properties);
 		consumer.subscribe("eros_test", "*", new MessageListener() {
 			public Action consume(Message message, ConsumeContext context) {
-				//TODO: 能否在consume里面使用线程池?
 				//TODO: 如何保证不同用户的隔离, 即A用户超时不会影响B
-//				System.out.println(Thread.currentThread().getId());
-				System.out.println("Receive: " + message.getKey());
+				logger.debug("Receive: " + message.getKey());
 				CloseableHttpClient httpclient = HttpClients.createDefault();
 				String probeSn = message.getTag();
 //				http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
 				HttpPost httpPost = new HttpPost(getRouterAddress(probeSn));
 				List<NameValuePair> nvps = buildPostFormEntity(message); 
 				
-				CloseableHttpResponse response2 = null;
+				CloseableHttpResponse response = null;
 
 				//超过一定时间自动关闭
 				int timeout = 5;
@@ -73,32 +89,27 @@ public class ConsumerClient {
 				httpPost.setConfig(config);
 				try {
 					httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
-					response2 = httpclient.execute(httpPost);
+					response = httpclient.execute(httpPost);
 				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 				try {
-//					System.out.println(response2.getStatusLine());
-					HttpEntity entity2 = response2.getEntity();
-//					System.out.println("response:" + EntityUtils.toString(entity2));
-					entity2.getContent();
+					logger.debug(response.getStatusLine().toString());
+					HttpEntity entity = response.getEntity();
+					logger.debug("response:" + EntityUtils.toString(entity));
 					// do something useful with the response body
 					// and ensure it is fully consumed
-					EntityUtils.consume(entity2);
+					EntityUtils.consume(entity);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally {
 					try {
-						response2.close();
+						response.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -111,29 +122,36 @@ public class ConsumerClient {
 		consumer.start();
 	}
 	
-	private static List<NameValuePair> buildPostFormEntity(Message message){
+	private List<NameValuePair> buildPostFormEntity(Message message){
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		String timestamp = String.valueOf(System.currentTimeMillis());
 		Random random = new Random();
 		String nonce = String.valueOf(random.nextInt(1000));
 		String token = getToken(message.getTag());
 		
-		nvps.add(new BasicNameValuePair("command", "RAWDATA"));
+		nvps.add(new BasicNameValuePair("command", "treebear.probedata.post"));
 		nvps.add(new BasicNameValuePair("timestamp",timestamp));
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
 		nvps.add(new BasicNameValuePair("chinese", "中文"));
+		nvps.add(new BasicNameValuePair("probeSn", message.getKey()));
 		
 		return nvps;
 	}
 	
-	private static String getRouterAddress(String sn){
-		if("3041158L01FA".equalsIgnoreCase(sn)){
-			return "http://127.0.0.1:18080/witown-cheat-sheet/api/postdata.htm"; 
-		}
-		System.err.println("err occur" + sn);
-		return "";
+	/**
+	 * 跟老潘商量下这个会是怎么合作, 第三方统一绑定探针到某代理商下?
+	 * @param sn
+	 * @return
+	 */
+	private String getRouterAddress(String sn){
+		OpenThirdInfoExample example = new OpenThirdInfoExample();
+		example.createCriteria().andAppidEqualTo(sn2appid(sn));
+		
+		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByExample(example).get(0);
+		
+		return thirdInfo.getUrl();
 	}
 	
 	/**
@@ -141,14 +159,24 @@ public class ConsumerClient {
 	 * @param sn
 	 * @return
 	 */
-	private static String getToken(String sn){
+	private String getToken(String sn){
+		
+		OpenThirdInfoExample example = new OpenThirdInfoExample();
+		example.createCriteria().andAppidEqualTo(sn2appid(sn));
+		
+		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByExample(example).get(0);
+		
+		return thirdInfo.getToken();
+	}
+	
+	private static String sn2appid(String sn){
 		if("3041158L01FA".equals(sn)){
-			return "gjA4fd0";
+			return "treebear";
 		}
 		return "";
 	}
 	
-	private static String sign(String timestamp, String nonce, String token){
+	private String sign(String timestamp, String nonce, String token){
 		String[] tempArr = new String[]{token, timestamp, nonce};
 		Arrays.sort(tempArr);
 		StringBuffer tempStrSB = new StringBuffer();

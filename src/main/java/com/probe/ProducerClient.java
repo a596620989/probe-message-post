@@ -2,6 +2,9 @@ package com.probe;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.Producer;
@@ -11,6 +14,7 @@ import com.aliyun.openservices.ons.api.SendResult;
 public class ProducerClient {
 
 	private static boolean flag = true;
+	protected Logger            logger           = LoggerFactory.getLogger(getClass()); 
 
 	public static void main(String[] args) {
 		Properties properties = new Properties();
