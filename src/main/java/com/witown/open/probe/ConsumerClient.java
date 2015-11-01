@@ -67,55 +67,58 @@ public class ConsumerClient {
 		Consumer consumer = ONSFactory.createConsumer(properties);
 		consumer.subscribe("eros_test", "*", new MessageListener() {
 			public Action consume(Message message, ConsumeContext context) {
-				//TODO: 如何保证不同用户的隔离, 即A用户超时不会影响B
-				System.out.println("Receive: " + message.getKey());
-				System.out.println("aaaaaaa");
-				CloseableHttpClient httpclient = HttpClients.createDefault();
-				String probeSn = message.getTag();
-//				http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
-				HttpPost httpPost = new HttpPost(getRouterAddress(probeSn));
-				List<NameValuePair> nvps = buildPostFormEntity(message); 
-				
-				CloseableHttpResponse response = null;
-
-				//超过一定时间自动关闭
-				int timeout = 5;
-				RequestConfig config = RequestConfig.custom()
-						.setConnectTimeout(timeout * 1000)
-						.setConnectionRequestTimeout(timeout * 1000)
-						.setSocketTimeout(timeout * 1000)
-						.build();
-				httpPost.setConfig(config);
-				try {
-					httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
-					response = httpclient.execute(httpPost);
-				} catch (Exception e){
-					System.out.println(e.getMessage());
-					e.printStackTrace();
-				}
-
-				try {
-					System.out.println(response.getStatusLine().toString());
-					HttpEntity entity = response.getEntity();
-					System.out.println("response:" + EntityUtils.toString(entity));
-					// do something useful with the response body
-					// and ensure it is fully consumed
-					EntityUtils.consume(entity);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					try {
-						response.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
+				messageHandler(message);
 				//现阶段不进行重传. TODO: 后期加上重传
 				return Action.CommitMessage;
 			}
 		});
 		consumer.start();
+	}
+	
+	private void messageHandler(Message message) {
+		//TODO: 如何保证不同用户的隔离, 即A用户超时不会影响B
+		System.out.println("Receive: " + message.getKey());
+		System.out.println("aaaaaaa");
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		String probeSn = message.getTag();
+//		http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
+		HttpPost httpPost = new HttpPost(getRouterAddress(probeSn));
+		List<NameValuePair> nvps = buildPostFormEntity(message); 
+		
+		CloseableHttpResponse response = null;
+
+		//超过一定时间自动关闭
+		int timeout = 5;
+		RequestConfig config = RequestConfig.custom()
+				.setConnectTimeout(timeout * 1000)
+				.setConnectionRequestTimeout(timeout * 1000)
+				.setSocketTimeout(timeout * 1000)
+				.build();
+		httpPost.setConfig(config);
+		try {
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
+			response = httpclient.execute(httpPost);
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+
+		try {
+			System.out.println(response.getStatusLine().toString());
+			HttpEntity entity = response.getEntity();
+			System.out.println("response:" + EntityUtils.toString(entity));
+			// do something useful with the response body
+			// and ensure it is fully consumed
+			EntityUtils.consume(entity);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				response.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private List<NameValuePair> buildPostFormEntity(Message message){
@@ -125,7 +128,7 @@ public class ConsumerClient {
 		String nonce = String.valueOf(random.nextInt(1000));
 		String token = getToken(message.getTag());
 		
-		nvps.add(new BasicNameValuePair("command", "treebear.probedata.post"));
+		nvps.add(new BasicNameValuePair("method", "treebear.probedata.post"));
 		nvps.add(new BasicNameValuePair("timestamp",timestamp));
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));

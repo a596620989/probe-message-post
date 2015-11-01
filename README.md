@@ -1,13 +1,13 @@
-#TODO:
-	svr_probe2
-	probe.log 分离
-	post重试可以依赖ons自身的重试机制
-	开发一套第三方的调试界面
-	
+# 概述
+此文档为树熊和第三方厂商的探针数据对接方案, 树熊会将第三方所购买的探针设备的实时数据推送到第三方厂商的服务器.
 
-树熊服务器在5秒内(之后会根据数据包的大小动态调整)收不到响应会断掉连接, 考虑到我们的业务场景, 允许一定的数据丢失, 所以失败后树熊不会发起重试(不排除后期加上重试机制的可能).
-由于重试机制依赖于第三方的响应, 因此树熊并不能保证无重复的数据包.
-数据统一使用utf-8编码
+![image](https://github.com/a596620989/treebear-message-api/blob/master/img/probe-message-post.jpg) 
+
+
+### 规约
+1. 树熊服务器在5秒内(之后会根据数据包的大小动态调整)收不到响应会断掉连接, 考虑到我们的业务场景, 允许一定的数据丢失, 所以失败后树熊不会发起重试(不排除后期加上重试机制的可能).
+2. 由于重试机制依赖于第三方的响应, 因此树熊并不能保证无重复的数据包.
+3. 数据统一使用utf-8编码
 
 ### Get Started
 * 向树熊索要token.
@@ -45,31 +45,14 @@
 
 
 ### 第三方如何测试?
-	调试时的token咋办?
-	
-	https://mp.weixin.qq.com/debug/cgi-bin/apiinfo?t=index&type=%E6%B6%88%E6%81%AF%E6%8E%A5%E5%8F%A3%E8%B0%83%E8%AF%95&form=%E4%BA%8B%E4%BB%B6%E6%B6%88%E6%81%AF
-	提供url, 开发者填写URL，调试时将把消息推送到该URL上
-	command:RAWDATA
-	probeData: 
-	
-	TODO:可以考虑使用SDK的方式封装到listener中去
-	@RequestMapping("api/postData"){
-		switch(request.getParameter("command")){
-			case:TreebearCommand.RAWDATA
-				//request.getParam("jsonData")
-				//store to db
-				//response to treebear
-			case:TreebearCommand.DATAFORMAT1
-				//...
-			case:TreebearCommand.REALABLEDATA
-				//...
-				//响应树熊以便树熊重试
-	}
-	
+
+1. 访问http://wifitest2.witown.com:10808/api/debug.htm
+2. 选择要调试的方法, 按要求填入url, toke等参数
+3. 之后树熊会向第三方提供的url中发送post请求
 	
 
-### 附录
-* probeData
+## 附录
+#### probeData
 
 ```
 	[
@@ -80,7 +63,7 @@
 	]
 ```
 
-* devMac(设备mac)
+#### devMac(设备mac)
 
 
 ``` 
@@ -91,9 +74,6 @@
 		...更多列
 	}
 ```
-
-
-api和安全相关的代码应该分开. 比如用interceptor
 
 #### 安全机制
 1. 伪造:签名
@@ -116,4 +96,9 @@ api和安全相关的代码应该分开. 比如用interceptor
         responseText(echostr);
     }
     
-![image](https://github.com/a596620989/treebear-message-api/blob/master/img/probe-message-post.jpg) 
+
+## TODO
+1. svr_probe2
+2. probe.log 分离
+3. post重试可以依赖ons自身的重试机制
+4. 开发一套第三方的调试界面 -> done

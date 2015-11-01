@@ -1,0 +1,38 @@
+<!doctype html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设备返回列表</title>
+this is the debug page
+
+<form id="debugForm" name="debugForm" action="/api/do_debug.htm" method="post">
+	version：
+    <input name="version" id="version" type="text" value="1.0"/>
+    <br/>
+    method：
+	<select id="method" name='method' class="selectBox1" panelHeight="70">
+		<option value="treebear.probedata.post" selected="selected">treebear.probedata.post</option>
+	</select>
+	<br/>
+	timestamp：
+    <input name="timestamp" id="timestamp" type="text" value="1446368236580"/>
+    <br/>
+	nonce：
+	<input name="nonce" id="nonce" type="text" value="180"/>
+	<br/>
+    probeMac:
+    <input name="probeMac" id="probeMac" type="text" value="00:00:00:00:00:00"/>
+    <br/>
+    probeSn:
+    <input name="probeSn" id="probeSn" type="text" value="AEsc11099"/>
+    <br/>
+    probeData:
+    <input name="probeData" id="probeData" type="text"/>
+    <br/>
+    url:
+    <input name="url" id="url" type="text" value="http://127.0.0.1:10808/api/postdata.htm"/>
+    <br/>
+    token:
+    <input name="token" id="token" type="text" value="gjA4fd0"/>
+    <br/>
+    <input type="submit"/>
+</form>
