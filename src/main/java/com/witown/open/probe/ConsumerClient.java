@@ -1,20 +1,16 @@
 package com.witown.open.probe;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -25,6 +21,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
@@ -43,9 +41,10 @@ import com.witown.entity.OpenThirdInfoExample;
  * @author eros
  *
  */
+@Component
 public class ConsumerClient {
 	
-//	@Autowired
+	@Autowired
 	private OpenThirdInfoMapper openThirdInfoMapper;
 	
 	protected static Logger            logger           = LoggerFactory.getLogger(ConsumerClient.class); 
@@ -53,7 +52,6 @@ public class ConsumerClient {
 	/**
 	 * 当容器启动时自动执行
 	 */
-	@PostConstruct
 	public void startup(){
 
 		Properties properties = new Properties();
@@ -70,7 +68,8 @@ public class ConsumerClient {
 		consumer.subscribe("eros_test", "*", new MessageListener() {
 			public Action consume(Message message, ConsumeContext context) {
 				//TODO: 如何保证不同用户的隔离, 即A用户超时不会影响B
-				logger.debug("Receive: " + message.getKey());
+				System.out.println("Receive: " + message.getKey());
+				System.out.println("aaaaaaa");
 				CloseableHttpClient httpclient = HttpClients.createDefault();
 				String probeSn = message.getTag();
 //				http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
@@ -90,18 +89,15 @@ public class ConsumerClient {
 				try {
 					httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 					response = httpclient.execute(httpPost);
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (Exception e){
+					System.out.println(e.getMessage());
 					e.printStackTrace();
 				}
 
 				try {
-					logger.debug(response.getStatusLine().toString());
+					System.out.println(response.getStatusLine().toString());
 					HttpEntity entity = response.getEntity();
-					logger.debug("response:" + EntityUtils.toString(entity));
+					System.out.println("response:" + EntityUtils.toString(entity));
 					// do something useful with the response body
 					// and ensure it is fully consumed
 					EntityUtils.consume(entity);
