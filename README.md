@@ -1,7 +1,7 @@
 # 概述
 此文档为树熊和第三方厂商的探针数据对接方案, 树熊会将第三方所购买的探针设备的实时数据推送到第三方厂商的服务器.
 
-![image](https://github.com/a596620989/treebear-message-api/blob/master/img/probe-message-post.jpg) 
+![image](img/probe-message-post.jpg) 
 
 
 ### 规约
