@@ -20,7 +20,7 @@ public class StartupListener implements ApplicationListener<org.springframework.
 	private ConsumerClient consumerClient;
 
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-//		consumerClient.startup();
+		consumerClient.startup();
 		// ProbeService service =
 		// event.getApplicationContext().getBean(ProbeService.class);
 		// System.out.println(openThirdInfoDAO);
