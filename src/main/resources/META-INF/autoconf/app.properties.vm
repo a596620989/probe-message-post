@@ -1,0 +1,8 @@
+ons.properties.consumerId = ${probe_server_ons_producerId}
+ons.properties.accessKey = IlUQ8E7i3CFFbGax
+ons.properties.secretKey = RyrjiIGBCIlMqQd5lJzbAmd6FUoHOO
+probe.mq.topic = ${probe_server_ons_topic}
+
+dubbo.registry.address=${probe_server_dubbo_registry_address}
+
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config description="auto config">
+
+    <group name="probe.message.ons">
+        <property name="probe.message.env" defaultValue="dev" description="env"/>
+    </group>
+    <group name="probe.message.depends">
+        <property name="probe.message.dubbo.registry.address" defaultValue="zookeeper://127.0.0.1:2181"
+                  description="dubbo registry"/>
+    </group>
+    <script>
+        <generate template="app.properties.vm" destfile="app.properties" charset="UTF-8"/>
+        <generate template="logback.xml.vm" destfile="logback.xml" charset="UTF-8"/>
+    </script>
+</config>

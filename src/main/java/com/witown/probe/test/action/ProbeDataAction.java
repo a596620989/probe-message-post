@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +21,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.aliyun.openservices.ons.api.Message;
-import com.witown.open.probe.ConsumerClient;
 import com.witown.probe.web.service.ProbeService;
 
 import net.sf.json.JSONArray;
@@ -45,13 +44,15 @@ public class ProbeDataAction   {
 //	@Autowired
 //	private OpenThirdInfoDAO openThirdInfoDAO;
 
+	protected static Logger            logger           = LoggerFactory.getLogger("WebLogger"); 
+
 	static int i = 0;
 
 	@RequestMapping("/api/postdataslow.htm")
 	public String postdataSlow(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("我不会写代码, 我睡了5秒" + i);
+		logger.info("我不会写代码, 我睡了5秒" + i);
 
-		System.out.println("appid:" + probeService.aas().getAppid());
+		logger.info("appid:" + probeService.aas().getAppid());
 		i++;
 		try {
 			Thread.sleep(1000 * i);
@@ -64,7 +65,7 @@ public class ProbeDataAction   {
 
 	@RequestMapping("/api/debug.htm")
 	public String debug(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("enter debug");
+		logger.info("enter debug");
 		return "debug";
 	}
 	
@@ -108,14 +109,14 @@ public class ProbeDataAction   {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 			response = httpclient.execute(httpPost);
 		} catch (Exception e){
-			System.out.println(e.getMessage());
+			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
 
 		try {
-			System.out.println(response.getStatusLine().toString());
+			logger.info(response.getStatusLine().toString());
 			HttpEntity entity = response.getEntity();
-			System.out.println("response:" + EntityUtils.toString(entity));
+			logger.info("response:" + EntityUtils.toString(entity));
 			// do something useful with the response body
 			// and ensure it is fully consumed
 			EntityUtils.consume(entity);
@@ -158,17 +159,17 @@ public class ProbeDataAction   {
 		}
 		
 		String chinese = request.getParameter("chinese");
-		System.out.println(chinese);
+		logger.info(chinese);
 		if (TreebearCommand.PROBEDATA_POST.equals(method)) {
 			String probeData = request.getParameter("probeData");
-			net.sf.json.JSONArray nameArray = (JSONArray) JSONSerializer.toJSON(probeData);
-			System.out.println(nameArray.size());
-			for (Object jo : nameArray) {
+			net.sf.json.JSONArray probeArray = (JSONArray) JSONSerializer.toJSON(probeData);
+			logger.info("probeArray size:" + probeArray.size());
+			for (Object jo : probeArray) {
 				JSONObject json = (JSONObject) jo;
-				System.out.println(json.get("probeMac"));
-				System.out.println(json.get("devMac"));
-				System.out.println(json.get("probeSN"));
-				System.out.println(json.get("timeStamp")); 
+				logger.info("probeMac: {}", json.get("probeMac"));
+				logger.info("devMac: {}", json.get("devMac"));
+				logger.info("probeSN: {}", json.get("probeSN"));
+				logger.info("timeStamp: {}", json.get("timeStamp")); 
 			}
 			try {
 				// 响应树熊以便树熊重试

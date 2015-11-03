@@ -47,12 +47,14 @@ public class ConsumerClient {
 	@Autowired
 	private OpenThirdInfoMapper openThirdInfoMapper;
 	
-	protected static Logger            logger           = LoggerFactory.getLogger(ConsumerClient.class); 
+	protected static Logger            logger           = LoggerFactory.getLogger("ConsumerLogger"); 
 	
 	/**
 	 * 当容器启动时自动执行
 	 */
 	public void startup(){
+		
+		logger.info("begin to start consumer >>>");
 
 		Properties properties = new Properties();
 		properties.put(PropertyKeyConst.ConsumerId, "CID_1002");
@@ -73,14 +75,15 @@ public class ConsumerClient {
 			}
 		});
 		consumer.start();
+		logger.info("begin to start consumer end <<<");
 	}
 	
 	private void messageHandler(Message message) {
 		//TODO: 如何保证不同用户的隔离, 即A用户超时不会影响B
-		System.out.println("Receive: " + message.getKey());
-		System.out.println("aaaaaaa");
+		logger.debug("Receive: " + message.getKey());
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		String probeSn = message.getTag();
+		logger.debug("probeSn:" + probeSn);
 //		http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
 		HttpPost httpPost = new HttpPost(getRouterAddress(probeSn));
 		List<NameValuePair> nvps = buildPostFormEntity(message); 
@@ -99,14 +102,14 @@ public class ConsumerClient {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 			response = httpclient.execute(httpPost);
 		} catch (Exception e){
-			System.out.println(e.getMessage());
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 
 		try {
-			System.out.println(response.getStatusLine().toString());
+			logger.debug(response.getStatusLine().toString());
 			HttpEntity entity = response.getEntity();
-			System.out.println("response:" + EntityUtils.toString(entity));
+			logger.debug("response:" + EntityUtils.toString(entity));
 			// do something useful with the response body
 			// and ensure it is fully consumed
 			EntityUtils.consume(entity);
