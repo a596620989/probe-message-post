@@ -4,7 +4,7 @@
 <tool>
     <key>simpleTool</key>
     <scope>application</scope>
-    <class>com.witown.util.velocity.toolbox.SimpleTool</class>
+    <class>com.probe.util.velocity.toolbox.SimpleTool</class>
 </tool>
 
 </toolbox> 

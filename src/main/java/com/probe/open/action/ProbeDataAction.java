@@ -67,6 +67,7 @@ public class ProbeDataAction   {
 	@RequestMapping("/api/debug.htm")
 	public String debug(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("enter debug");
+		System.out.println("enter aa");
 		return "debug";
 	}
 	
@@ -183,6 +184,11 @@ public class ProbeDataAction   {
 		return null;
 	}
 	
+	@RequestMapping("/sys/monitor.htm")
+	public String monitor(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("server started");
+		return null;
+	}
 	
 
 	private static String sign(String timestamp, String nonce, String token){
