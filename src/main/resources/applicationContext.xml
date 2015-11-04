@@ -16,7 +16,7 @@
 
 	<context:annotation-config/>
 	
-    <bean class="com.witown.action.core.ApplicationHelper"></bean>
+    <bean class="com.probe.open.action.ApplicationHelper"></bean>
     
     <import resource="spring-db.xml"/>
 	

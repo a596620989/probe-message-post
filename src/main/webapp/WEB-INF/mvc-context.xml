@@ -22,7 +22,7 @@
 	<mvc:annotation-driven />
 
 
-	<context:component-scan base-package="com.witown" />
+	<context:component-scan base-package="com.probe" />
 	<context:annotation-config />
 
 	<mvc:resources mapping="/resources/**" location="/resources/"
@@ -31,7 +31,7 @@
 	<mvc:default-servlet-handler />
 
 	<mvc:interceptors>
-		<bean class="com.witown.action.core.SimpleHandlerInterceptor" />
+		<bean class="com.probe.open.action.SimpleHandlerInterceptor" />
 	</mvc:interceptors>
 
 	<bean id="velocityConfig"

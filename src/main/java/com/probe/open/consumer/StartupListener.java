@@ -1,4 +1,4 @@
-package com.witown.open.probe;
+package com.probe.open.consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

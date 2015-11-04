@@ -35,7 +35,7 @@
 		<property name="password" value="witown1234" />
 	</bean>
 
-	<mybatis:scan base-package="com.witown.dao" />
+	<mybatis:scan base-package="com.probe.open.dao" />
 
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
