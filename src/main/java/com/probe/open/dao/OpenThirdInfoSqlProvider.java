@@ -1,4 +1,4 @@
-package com.witown.dao;
+package com.probe.open.dao;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.BEGIN;
 import static org.apache.ibatis.jdbc.SqlBuilder.DELETE_FROM;
@@ -13,12 +13,13 @@ import static org.apache.ibatis.jdbc.SqlBuilder.UPDATE;
 import static org.apache.ibatis.jdbc.SqlBuilder.VALUES;
 import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
-import com.witown.entity.OpenThirdInfo;
-import com.witown.entity.OpenThirdInfoExample.Criteria;
-import com.witown.entity.OpenThirdInfoExample.Criterion;
-import com.witown.entity.OpenThirdInfoExample;
 import java.util.List;
 import java.util.Map;
+
+import com.probe.open.entity.OpenThirdInfo;
+import com.probe.open.entity.OpenThirdInfoExample;
+import com.probe.open.entity.OpenThirdInfoExample.Criteria;
+import com.probe.open.entity.OpenThirdInfoExample.Criterion;
 
 public class OpenThirdInfoSqlProvider {
 

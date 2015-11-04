@@ -32,9 +32,9 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
-import com.witown.dao.OpenThirdInfoMapper;
-import com.witown.entity.OpenThirdInfo;
-import com.witown.entity.OpenThirdInfoExample;
+import com.probe.open.dao.OpenThirdInfoMapper;
+import com.probe.open.entity.OpenThirdInfo;
+import com.probe.open.entity.OpenThirdInfoExample;
 
 /**
  * 一个topic可以被多个消费者实例消费, 对应于我们的情况会是一台服务器一个消费者实例

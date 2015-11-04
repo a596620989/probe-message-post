@@ -1,7 +1,5 @@
-package com.witown.dao;
+package com.probe.open.dao;
 
-import com.witown.entity.OpenThirdInfo;
-import com.witown.entity.OpenThirdInfoExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.DeleteProvider;
@@ -15,6 +13,9 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.type.JdbcType;
+
+import com.probe.open.entity.OpenThirdInfo;
+import com.probe.open.entity.OpenThirdInfoExample;
 
 public interface OpenThirdInfoMapper {
     /**

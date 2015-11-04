@@ -1,4 +1,4 @@
-package com.witown.probe.test.action;
+package com.probe.open.action;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +28,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.witown.probe.web.service.ProbeService;
+import com.probe.open.service.ProbeService;
+import com.probe.open.util.TreebearCommand;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

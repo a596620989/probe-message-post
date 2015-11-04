@@ -1,4 +1,4 @@
-package com.witown.action.core;
+package com.probe.open.action;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

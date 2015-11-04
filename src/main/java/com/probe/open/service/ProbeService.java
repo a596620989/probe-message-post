@@ -1,10 +1,10 @@
-package com.witown.probe.web.service;
+package com.probe.open.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.witown.dao.OpenThirdInfoMapper;
-import com.witown.entity.OpenThirdInfo;
+import com.probe.open.dao.OpenThirdInfoMapper;
+import com.probe.open.entity.OpenThirdInfo;
 
 @Service
 public class ProbeService {

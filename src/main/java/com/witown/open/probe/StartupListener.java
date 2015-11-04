@@ -14,19 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartupListener implements ApplicationListener<org.springframework.context.event.ContextRefreshedEvent> {
 
-	// @Autowired
-	// private OpenThirdInfoDAO openThirdInfoDAO;
 	@Autowired
 	private ConsumerClient consumerClient;
 
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		consumerClient.startup();
-		// ProbeService service =
-		// event.getApplicationContext().getBean(ProbeService.class);
-		// System.out.println(openThirdInfoDAO);
-		// System.out.println(ApplicationHelper.getApplicationContext().getBean(ProbeService.class));
-		// System.out.println(service);
-		// System.out.println(probeService);
 	}
 
 }

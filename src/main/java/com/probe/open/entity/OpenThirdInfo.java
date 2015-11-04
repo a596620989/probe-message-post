@@ -1,4 +1,4 @@
-package com.witown.entity;
+package com.probe.open.entity;
 
 import java.util.Date;
 
