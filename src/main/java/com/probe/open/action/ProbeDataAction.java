@@ -23,12 +23,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.probe.open.service.ProbeService;
 import com.probe.open.util.TreebearCommand;
 
 import net.sf.json.JSONArray;
@@ -39,8 +37,6 @@ import net.sf.json.JSONSerializer;
 @Scope("prototype")
 public class ProbeDataAction   {
 	
-	@Autowired
-	private ProbeService probeService;
 	
 //	@Autowired
 //	private OpenThirdInfoDAO openThirdInfoDAO;
@@ -53,7 +49,6 @@ public class ProbeDataAction   {
 	public String postdataSlow(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("我不会写代码, 我睡了5秒" + i);
 
-		logger.info("appid:" + probeService.aas().getAppid());
 		i++;
 		try {
 			Thread.sleep(1000 * i);

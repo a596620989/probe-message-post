@@ -32,9 +32,10 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
-import com.probe.open.dao.OpenThirdInfoMapper;
 import com.probe.open.entity.OpenThirdInfo;
-import com.probe.open.entity.OpenThirdInfoExample;
+import com.probe.open.entity.PostRouter;
+import com.probe.open.entity.PostRouterExample;
+import com.probe.open.service.PostRouterService;
 
 /**
  * 一个topic可以被多个消费者实例消费, 对应于我们的情况会是一台服务器一个消费者实例
@@ -44,8 +45,10 @@ import com.probe.open.entity.OpenThirdInfoExample;
 @Component
 public class ConsumerClient {
 	
+	
 	@Autowired
-	private OpenThirdInfoMapper openThirdInfoMapper;
+	private PostRouterService postRouterService;
+	
 	
 	protected static Logger            logger           = LoggerFactory.getLogger("ConsumerLogger"); 
 	
@@ -85,7 +88,11 @@ public class ConsumerClient {
 		String probeSn = message.getTag();
 		logger.debug("probeSn:" + probeSn);
 //		http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
-		HttpPost httpPost = new HttpPost(getRouterAddress(probeSn));
+		String routerAddress = postRouterService.getAddress(probeSn);
+		if(routerAddress == null){
+			return;
+		}
+		HttpPost httpPost = new HttpPost(routerAddress);
 		List<NameValuePair> nvps = buildPostFormEntity(message); 
 		
 		CloseableHttpResponse response = null;
@@ -129,54 +136,18 @@ public class ConsumerClient {
 		String timestamp = String.valueOf(System.currentTimeMillis());
 		Random random = new Random();
 		String nonce = String.valueOf(random.nextInt(1000));
-		String token = getToken(message.getTag());
+		String token = postRouterService.getToken(message.getTag());
 		
 		nvps.add(new BasicNameValuePair("method", "treebear.probedata.post"));
 		nvps.add(new BasicNameValuePair("timestamp",timestamp));
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
-		nvps.add(new BasicNameValuePair("chinese", "中文"));
 		nvps.add(new BasicNameValuePair("probeSn", message.getKey()));
 		
 		return nvps;
 	}
 	
-	/**
-	 * 跟老潘商量下这个会是怎么合作, 第三方统一绑定探针到某代理商下?
-	 * @param sn
-	 * @return
-	 */
-	private String getRouterAddress(String sn){
-		OpenThirdInfoExample example = new OpenThirdInfoExample();
-		example.createCriteria().andAppidEqualTo(sn2appid(sn));
-		
-		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByExample(example).get(0);
-		
-		return thirdInfo.getUrl();
-	}
-	
-	/**
-	 * sn -> router mapping -> appid -> token
-	 * @param sn
-	 * @return
-	 */
-	private String getToken(String sn){
-		
-		OpenThirdInfoExample example = new OpenThirdInfoExample();
-		example.createCriteria().andAppidEqualTo(sn2appid(sn));
-		
-		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByExample(example).get(0);
-		
-		return thirdInfo.getToken();
-	}
-	
-	private static String sn2appid(String sn){
-		if("3041158L01FA".equals(sn)){
-			return "treebear";
-		}
-		return "";
-	}
 	
 	private String sign(String timestamp, String nonce, String token){
 		String[] tempArr = new String[]{token, timestamp, nonce};
