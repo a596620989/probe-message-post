@@ -1,7 +1,8 @@
-ons.properties.consumerId = ${probe_server_ons_producerId}
-ons.properties.accessKey = IlUQ8E7i3CFFbGax
-ons.properties.secretKey = RyrjiIGBCIlMqQd5lJzbAmd6FUoHOO
-probe.mq.topic = ${probe_server_ons_topic}
+probe.message.ons.consumerid=CID_1002
+probe.message.ons.accesskey=0XznofrZlweGBMOW
+probe.message.ons.secretkey=szjziLTxr9NZAXVOcYGsgBKOY4ENan
+probe.message.ons.topic=eros_test
+
 
 dubbo.registry.address=${probe_server_dubbo_registry_address}
 

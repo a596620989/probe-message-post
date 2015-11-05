@@ -1,7 +1,12 @@
-1. velocity config -> done
-2. 对接文档
-3. log mixed & logback config
-4. sn -> url -> pan
+*. api/debug.htm 改为ajax post, 同时在改页面显示结果 {\"errcode\":0,\"errmsg\":\"ok\"} + 签名
+*. velocity config -> done
+*. 对接文档
+*. log mixed & logback config -> done
+*. sn -> url -> pan -> done
+*. producer & consumer -> autoConfig  -> done
+*. test下的类找不到文件 -> done
+*. 为sign等写单元测试
+*. open api for wi_open_post_router
 
 
 1. ONS消息堆积测试

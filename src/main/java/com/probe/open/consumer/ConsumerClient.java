@@ -22,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.aliyun.openservices.ons.api.Action;
@@ -32,9 +33,6 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
-import com.probe.open.entity.OpenThirdInfo;
-import com.probe.open.entity.PostRouter;
-import com.probe.open.entity.PostRouterExample;
 import com.probe.open.service.PostRouterService;
 
 /**
@@ -49,6 +47,15 @@ public class ConsumerClient {
 	@Autowired
 	private PostRouterService postRouterService;
 	
+	@Value("${probe.message.ons.consumerid}")
+	private String consumerId;
+	@Value("${probe.message.ons.accesskey}")
+	private String accessKey;
+	@Value("${probe.message.ons.secretkey}")
+	private String secretKey;
+	@Value("${probe.message.ons.topic}")
+	private String topic;
+	
 	
 	protected static Logger            logger           = LoggerFactory.getLogger("ConsumerLogger"); 
 	
@@ -60,9 +67,10 @@ public class ConsumerClient {
 		logger.info("begin to start consumer >>>");
 
 		Properties properties = new Properties();
-		properties.put(PropertyKeyConst.ConsumerId, "CID_1002");
-		properties.put(PropertyKeyConst.AccessKey, "0XznofrZlweGBMOW");
-		properties.put(PropertyKeyConst.SecretKey, "szjziLTxr9NZAXVOcYGsgBKOY4ENan");
+		properties.put(PropertyKeyConst.ConsumerId, consumerId);
+		properties.put(PropertyKeyConst.AccessKey, accessKey);
+		properties.put(PropertyKeyConst.SecretKey, secretKey);
+		
 		/**
          * 设置消费端线程数, 阿里云默认值为20
          */
@@ -70,7 +78,7 @@ public class ConsumerClient {
 		properties.put(PropertyKeyConst.MessageModel,
 				 PropertyValueConst.CLUSTERING);
 		Consumer consumer = ONSFactory.createConsumer(properties);
-		consumer.subscribe("eros_test", "*", new MessageListener() {
+		consumer.subscribe(topic, "*", new MessageListener() {
 			public Action consume(Message message, ConsumeContext context) {
 				messageHandler(message);
 				//现阶段不进行重传. TODO: 后期加上重传

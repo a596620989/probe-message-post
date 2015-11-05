@@ -14,6 +14,7 @@ import com.aliyun.openservices.ons.api.SendResult;
 public class ProducerClient {
 
 	private static boolean flag = true;
+	
 	protected Logger            logger           = LoggerFactory.getLogger(getClass()); 
 
 	public static void main(String[] args) {

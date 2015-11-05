@@ -25,8 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.probe.open.util.HttpUtil;
 import com.probe.open.util.TreebearCommand;
 
 import net.sf.json.JSONArray;
@@ -66,8 +68,14 @@ public class ProbeDataAction   {
 		return "debug";
 	}
 	
+	
+	/**
+	 * 不依赖任何本地的数据, 只是简单的根据用户填写的参数发送post请求
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/api/do_debug.htm")
-	public String doDebug(HttpServletRequest request) {
+	public String doDebug(HttpServletRequest request, ModelMap model, HttpServletResponse httpServletResponse) {
 		
 		String method = request.getParameter("method");
 		String nonce = request.getParameter("nonce");	
@@ -111,9 +119,13 @@ public class ProbeDataAction   {
 		}
 
 		try {
-			logger.info(response.getStatusLine().toString());
+			logger.info("第三方服务状态码:" + response.getStatusLine().toString());
 			HttpEntity entity = response.getEntity();
-			logger.info("response:" + EntityUtils.toString(entity));
+			
+			String responseJson = EntityUtils.toString(entity);
+			
+			logger.info("第三方返回值:" + responseJson);
+			HttpUtil.outPut(responseJson, httpServletResponse);			
 			// do something useful with the response body
 			// and ensure it is fully consumed
 			EntityUtils.consume(entity);
@@ -127,7 +139,7 @@ public class ProbeDataAction   {
 			}
 		}
 		
-		return "success";
+		return null;
 	}
 	
 	
@@ -151,12 +163,12 @@ public class ProbeDataAction   {
 		String timestamp = request.getParameter("timestamp");
 		
 		if(signature== null || !signature.equals(sign(timestamp, nonce, token))){
-			System.err.println("invalidate sign");
+			logger.error("invalidate sign");
 			return null;
 		}
 		
-		String chinese = request.getParameter("chinese");
-		logger.info(chinese);
+//		String chinese = request.getParameter("chinese");
+//		logger.info(chinese);
 		if (TreebearCommand.PROBEDATA_POST.equals(method)) {
 			String probeData = request.getParameter("probeData");
 			net.sf.json.JSONArray probeArray = (JSONArray) JSONSerializer.toJSON(probeData);

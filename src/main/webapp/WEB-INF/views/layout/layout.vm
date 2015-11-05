@@ -7,5 +7,7 @@
 	
 	<body> $screen_content </body>
 	
+	<div style="display:none">	
 	我是小尾巴...
+	</div>
 </html>
