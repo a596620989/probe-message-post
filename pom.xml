@@ -26,6 +26,9 @@
 	<properties>
 		<org.springframework.version>4.2.2.RELEASE</org.springframework.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <zookeeper.client.version>0.1</zookeeper.client.version>
+        <dubbo.version>2.5.3</dubbo.version>
+        <zookeeper.version>3.3.3</zookeeper.version>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
@@ -188,6 +191,40 @@
 			</dependency>
 
 			<!-- springframework dependency end -->
+			<!-- dubbo -->
+            <dependency>
+                <groupId>com.witown</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            	<exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.github.sgroschupf</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zookeeper.client.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
