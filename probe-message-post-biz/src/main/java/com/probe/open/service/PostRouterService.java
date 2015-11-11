@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.probe.open.biz.remoting.impl.PostRouterApiImpl;
 import com.probe.open.dao.OpenThirdInfoMapper;
 import com.probe.open.dao.PostRouterMapper;
 import com.probe.open.entity.OpenThirdInfo;
+import com.probe.open.entity.OpenThirdInfoExample;
 import com.probe.open.entity.PostRouter;
 import com.probe.open.entity.PostRouterExample;
 
@@ -56,6 +56,22 @@ public class PostRouterService {
 		}
 		
 		return thirdInfo.getUrl();
+	}
+	
+	
+	public OpenThirdInfo getThirdInfo(String token){
+		if(token == null)
+		{
+			return null;
+		}
+		OpenThirdInfoExample example = new OpenThirdInfoExample();
+		example.createCriteria().andTokenEqualTo(token);
+		List<OpenThirdInfo> list = openThirdInfoMapper.selectByExample(example);
+		if (list.size() == 0)
+		{
+			return null;
+		}
+		return list.get(0);
 	}
 	
 	private PostRouter getPostRouter(String probeSn){
