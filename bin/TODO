@@ -1,0 +1,36 @@
+*. api/debug.htm 改为ajax post, 同时在改页面显示结果 {\"errcode\":0,\"errmsg\":\"ok\"} + 签名
+*. velocity config -> done
+*. 对接文档
+*. log mixed & logback config -> done
+*. sn -> url -> pan -> done
+*. producer & consumer -> autoConfig  -> done
+*. test下的类找不到文件 -> done
+*. 为sign等写单元测试
+*. open api for wi_open_post_router
+
+
+1. ONS消息堆积测试
+2. post server
+3. 微信post api参考
+	-|消息加密解密
+		微信公众平台采用AES对称加密算法对推送给公众帐号的消息体对行加密，EncodingAESKey则是加密所用的秘钥。公众帐号用此秘钥对收到的密文消息体进行解密，回复消息体也用此秘钥加密。
+		url上无encrypt_type参数或者其值为raw，表示消息体仅含有明文，公众账号回复明文。encrypt_type为aes则表示消息体含有密文，公众账号回复密文（兼容模式期间回复明文或密文均可）。
+
+
+	-|超时
+		微信服务器在五秒内收不到响应会断掉连接，并且重新发起请求，总共重试三次
+		假如服务器无法保证在五秒内处理并回复，必须直接回复空串（是指回复一个空字符串，而不是一个XML结构体中content字段的内容为空，请切勿误解），微信服务器不会对此作任何处理，并且不会发起重试。。这种情况下，可以使用客服消息接口进行异步回复。
+	-|method
+
+4. 确实是每个mac存一次ons的 -> TODO: 改为每个探针放一个消息 -|消息格式 & 序列化 & 反序列化
+	ons的消息格式?如何序列化? -> JsonUtil.toJson(message) -> gson.toJson(object).getBytes()
+	ons消费者如何反序列化? -> return CommonUtil.fromJson(msgClass, new String(content));
+5. 是否需要考虑字符编码(中文乱码)?
+
+
+{probeMac:"00:00:00:00:00:00", devMac='00:00:00:00:00:00', probeSN='3041158L01FA', phoneNumber='15088603622', timeStamp=1446010565999}
+
+
+
+用 id 来标记应用，用密钥来对请求做签名
+

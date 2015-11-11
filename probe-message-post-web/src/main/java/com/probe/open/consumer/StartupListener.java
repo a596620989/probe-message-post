@@ -18,7 +18,20 @@ public class StartupListener implements ApplicationListener<org.springframework.
 	private ConsumerClient consumerClient;
 
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		consumerClient.startup();
+		/**
+		 * Generally in a Spring MVC application you have both a
+		 * ContextLoaderListener and DispatcherServlet. Both components create
+		 * their own ApplicationContext which in turn both fire a
+		 * ContextRefreshedEvent. The DispatcherServlet uses the
+		 * ApplicationContext as created by the ContextLoaderListener as its
+		 * parent. Events fired from child contexts are propagated to the parent
+		 * context. Now if you have an ApplicationListener
+		 * <ContextRefreshedEvent> defined in the root context (the one loaded
+		 * by the ContextLoaderListener) it will receive an event twice.
+		 */
+		if (event.getApplicationContext().getParent() == null) {
+			consumerClient.startup();
+		}
 	}
 
 }

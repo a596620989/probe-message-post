@@ -1,10 +1,12 @@
 package com.probe.open.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.probe.open.biz.remoting.impl.PostRouterApiImpl;
 import com.probe.open.dao.OpenThirdInfoMapper;
 import com.probe.open.dao.PostRouterMapper;
 import com.probe.open.entity.OpenThirdInfo;
@@ -19,6 +21,9 @@ public class PostRouterService {
 	
 	@Autowired
 	private PostRouterMapper postRouterMapper;
+	
+//	@Autowired
+//	private PostRouterApiImpl aaa;
 	
 	public String getToken(String probeSn){
 		PostRouter postRouter = getPostRouter(probeSn);
@@ -63,5 +68,11 @@ public class PostRouterService {
 		}
 		
 		return list.get(0);
+	}
+	
+	public void insert(PostRouter postRouter){
+		postRouter.setGmtcreated(new Date());
+		postRouter.setGmtmodified(new Date());
+		postRouterMapper.insert(postRouter);
 	}
 }
