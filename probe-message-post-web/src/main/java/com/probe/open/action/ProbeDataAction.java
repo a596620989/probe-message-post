@@ -157,10 +157,21 @@ public class ProbeDataAction   {
 		String token = "gjA4fd0";
 		
 		request.setCharacterEncoding("UTF-8");
+		String version = request.getParameter("version");
 		String method = request.getParameter("method");
+		String timestamp = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");	
 		String signature = request.getParameter("signature");	
-		String timestamp = request.getParameter("timestamp");
+		String probeMac = request.getParameter("probeMac");	
+		String probeSn = request.getParameter("probeSn");	
+	
+		logger.info(version);
+		logger.info(method);
+		logger.info(timestamp);
+		logger.info(nonce);
+		logger.info(signature);
+		logger.info(probeMac);
+		logger.info(probeSn);
 		
 		if(signature== null || !signature.equals(sign(timestamp, nonce, token))){
 			logger.error("invalidate sign");
@@ -175,9 +186,8 @@ public class ProbeDataAction   {
 			logger.info("probeArray size:" + probeArray.size());
 			for (Object jo : probeArray) {
 				JSONObject json = (JSONObject) jo;
-				logger.info("probeMac: {}", json.get("probeMac"));
 				logger.info("devMac: {}", json.get("devMac"));
-				logger.info("probeSN: {}", json.get("probeSN"));
+				logger.info("rssi: {}", json.get("rssi"));
 				logger.info("timeStamp: {}", json.get("timeStamp")); 
 			}
 			try {

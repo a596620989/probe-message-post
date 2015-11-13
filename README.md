@@ -18,7 +18,7 @@
 |参数|说明|
 |---|----|
 |version|协议版本号,当前1.0|
-|method|方法, 如treebear.probedata.post|
+|method|方法, treebear.probedata.post|
 |timestamp| 为后续抵抗重放攻击提供可能|
 |nonce| 随机数, 防重放攻击|
 |signature|加密/校验流程如下：<ul><li>1. 将token、timestamp、nonce三个参数进行字典序排序</li><li>2. 将三个参数字符串拼接成一个字符串进行sha1加密</li><li>3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于树熊</li></ul>|
@@ -71,6 +71,7 @@
 		"devMac":"00:00:00:00:00:00", //设备mac
 		"rssi": -55 //信号强度
 		"timeStamp":1446010565999, //探测这条消息时的时间戳
+		"leave": 1 //进入离开标志, 1代表设备进入, 2代码设备离开
 		...更多列
 	}
 ```

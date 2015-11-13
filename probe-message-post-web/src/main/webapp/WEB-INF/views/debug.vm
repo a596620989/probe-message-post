@@ -40,7 +40,7 @@ this is the debug page
 		</tr>
 		<tr>
 			<td>url:</td>
-			<td><input name="url" id="url" type="text" value="http://127.0.0.1:10808/api/postdata.htm"/></td>
+			<td><input name="url" id="url" type="text" value="http://127.0.0.1:10110/api/postdata.htm"/></td>
 		</tr>
 		<tr>
 			<td>token:</td>
