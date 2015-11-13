@@ -18,6 +18,10 @@ public class PostRouterApiImpl implements PostRouterApi {
 
 		OpenThirdInfo thirdInfo = postRouterService.getThirdInfo(token);
 
+		if(postRouterService.isProbeExist(probeSn)){
+			return false;
+		}
+		
 		if (thirdInfo != null) {
 			PostRouter postRouter = new PostRouter();
 			postRouter.setProbesn(probeSn);

@@ -91,4 +91,11 @@ public class PostRouterService {
 		postRouter.setGmtmodified(new Date());
 		postRouterMapper.insert(postRouter);
 	}
+	
+	public boolean isProbeExist(String probeSn){
+		if(getPostRouter(probeSn) == null){
+			return false;
+		}
+		return true;
+	}
 }
