@@ -21,6 +21,7 @@
 	</properties>
 
 	<dependencies>
+		
 		<dependency>
 			<groupId>com.witown.probe</groupId>
 			<artifactId>probe-message-post-biz</artifactId>
@@ -54,7 +55,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>	
+		</dependency>
 
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>

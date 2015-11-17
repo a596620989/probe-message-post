@@ -1,38 +1,34 @@
 package com.probe.open.service;
 
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.probe.open.dao.OpenThirdInfoMapper;
-import com.probe.open.dao.PostRouterMapper;
-import com.probe.open.entity.OpenThirdInfo;
-import com.probe.open.entity.OpenThirdInfoExample;
-import com.probe.open.entity.PostRouter;
-import com.probe.open.entity.PostRouterExample;
+import com.witown.domain.probe.OpenThirdInfo;
+import com.witown.domain.probe.PostRouter;
+import com.witown.remoting.service.RemotePostRouterService;
 
+/**
+ * @author eros
+ *
+ */
 @Service
 public class PostRouterService {
-
-	@Autowired
-	private OpenThirdInfoMapper openThirdInfoMapper;
 	
 	@Autowired
-	private PostRouterMapper postRouterMapper;
+	RemotePostRouterService remotePostRouterService;
+	
 	
 //	@Autowired
 //	private PostRouterApiImpl aaa;
 	
 	public String getToken(String probeSn){
-		PostRouter postRouter = getPostRouter(probeSn);
+		PostRouter postRouter = remotePostRouterService.getPostRouterByProbeSn(probeSn);
 		
 		if(postRouter == null){
 			return null;
 		}
 		
-		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByPrimaryKey(postRouter.getThirdid());
+		OpenThirdInfo thirdInfo = remotePostRouterService.getThirdInfoById(postRouter.getThirdId());
 		
 		if(thirdInfo == null){
 			return null;
@@ -43,13 +39,13 @@ public class PostRouterService {
 	
 	public String getAddress(String probeSn){
 		
-		PostRouter postRouter = getPostRouter(probeSn);
+		PostRouter postRouter = remotePostRouterService.getPostRouterByProbeSn(probeSn);
 		
 		if(postRouter == null){
 			return null;
 		}
 		
-		OpenThirdInfo thirdInfo = (OpenThirdInfo) openThirdInfoMapper.selectByPrimaryKey(postRouter.getThirdid());
+		OpenThirdInfo thirdInfo = remotePostRouterService.getThirdInfoById(postRouter.getThirdId());
 		
 		if(thirdInfo == null){
 			return null;
@@ -60,42 +56,21 @@ public class PostRouterService {
 	
 	
 	public OpenThirdInfo getThirdInfo(String token){
-		if(token == null)
-		{
-			return null;
-		}
-		OpenThirdInfoExample example = new OpenThirdInfoExample();
-		example.createCriteria().andTokenEqualTo(token);
-		List<OpenThirdInfo> list = openThirdInfoMapper.selectByExample(example);
-		if (list.size() == 0)
-		{
-			return null;
-		}
-		return list.get(0);
-	}
-	
-	private PostRouter getPostRouter(String probeSn){
-		PostRouterExample example = new PostRouterExample();
-		example.createCriteria().andProbesnEqualTo(probeSn);
-		List<PostRouter> list = postRouterMapper.selectByExample(example);	
 		
-		if(list.size() == 0){
-			return null;
-		}
-		
-		return list.get(0);
+		return remotePostRouterService.getThirdInfoByToken(token);
 	}
 	
-	public void insert(PostRouter postRouter){
-		postRouter.setGmtcreated(new Date());
-		postRouter.setGmtmodified(new Date());
-		postRouterMapper.insert(postRouter);
-	}
+//	public void insert(PostRouter postRouter){
+//		postRouter.setGmtcreated(new Date());
+//		postRouter.setGmtmodified(new Date());
+//		postRouterMapper.insert(postRouter);
+//	}
 	
-	public boolean isProbeExist(String probeSn){
-		if(getPostRouter(probeSn) == null){
-			return false;
-		}
-		return true;
-	}
+//	public boolean isProbeExist(String probeSn){
+//		PostRouter postRouter = remotePostRouterService.getPostRouterByProbeSn(probeSn);
+//		if(postRouter == null){
+//			return false;
+//		}
+//		return true;
+//	}
 }

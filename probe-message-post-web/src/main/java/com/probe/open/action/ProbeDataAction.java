@@ -182,6 +182,7 @@ public class ProbeDataAction   {
 //		logger.info(chinese);
 		if (TreebearCommand.PROBEDATA_POST.equals(method)) {
 			String probeData = request.getParameter("probeData");
+			logger.info("probeData" + probeData);
 			net.sf.json.JSONArray probeArray = (JSONArray) JSONSerializer.toJSON(probeData);
 			logger.info("probeArray size:" + probeArray.size());
 			for (Object jo : probeArray) {
@@ -189,6 +190,7 @@ public class ProbeDataAction   {
 				logger.info("devMac: {}", json.get("devMac"));
 				logger.info("rssi: {}", json.get("rssi"));
 				logger.info("timeStamp: {}", json.get("timeStamp")); 
+				logger.info("leave: {}", json.get("leave"));
 			}
 			try {
 				// 响应树熊以便树熊重试

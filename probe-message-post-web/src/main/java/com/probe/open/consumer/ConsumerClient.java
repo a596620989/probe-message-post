@@ -82,6 +82,7 @@ public class ConsumerClient {
 			public Action consume(Message message, ConsumeContext context) {
 				messageHandler(message);
 				//现阶段不进行重传. TODO: 后期加上重传
+				logger.info("message commited");
 				return Action.CommitMessage;
 			}
 		});

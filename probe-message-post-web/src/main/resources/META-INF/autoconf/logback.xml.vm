@@ -26,7 +26,7 @@
         </encoder>
     </appender>
 
-    <logger name="WebLogger" level="DEBUG" additivity="false">
+    <logger name="WebLogger" level="DEBUG" additivity="true">
         <appender-ref ref="webLogger"/>
     </logger>
 
@@ -37,9 +37,16 @@
         </encoder>
     </appender>
 
-    <logger name="ConsumerLogger" level="DEBUG" additivity="false">
+    <logger name="ConsumerLogger" level="DEBUG" additivity="true">
         <appender-ref ref="consumerLogger"/>
     </logger>
+
+	<!--
+	<logger name="com.alibaba" level="INFO" additivity="false">
+		<appender-ref ref="Console" />
+	</logger>
+	<logger name="RocketmqClient" level="INFO"/>
+	-->
 
     #if(${probe_message_env} == "dev")
         <root level="debug">
