@@ -11,10 +11,10 @@
     </group>
     
     <group name="ons">
-        <property name="probe.message.ons.consumerid" defaultValue="CID_1002" />
+        <property name="probe.message.ons.consumerid" defaultValue="CID_probe_message_post_dev1" />
         <property name="probe.message.ons.accesskey" defaultValue="0XznofrZlweGBMOW"/>
         <property name="probe.message.ons.secretkey" defaultValue="szjziLTxr9NZAXVOcYGsgBKOY4ENan"/>
-        <property name="probe.message.ons.topic" defaultValue="eros_test"/>
+        <property name="probe.message.ons.topic" defaultValue="probe-message-post-dev"/>
     </group>
     <script>
         <generate template="app.properties.vm" destfile="app.properties" charset="UTF-8"/>
