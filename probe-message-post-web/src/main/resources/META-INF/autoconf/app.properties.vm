@@ -1,4 +1,4 @@
-probe.message.ons.consumerid=CID_1002
-probe.message.ons.accesskey=0XznofrZlweGBMOW
-probe.message.ons.secretkey=szjziLTxr9NZAXVOcYGsgBKOY4ENan
-probe.message.ons.topic=eros_test
+probe.message.ons.consumerid=${probe_message_ons_consumerid}
+probe.message.ons.accesskey=${probe_message_ons_accesskey}
+probe.message.ons.secretkey=${probe_message_ons_secretkey}
+probe.message.ons.topic=#{probe_message_ons_topic}
