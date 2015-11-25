@@ -34,6 +34,7 @@ import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
 import com.probe.open.service.PostRouterService;
+import com.witown.portal.service.RemoteRouterService;
 
 /**
  * 一个topic可以被多个消费者实例消费, 对应于我们的情况会是一台服务器一个消费者实例
@@ -46,6 +47,9 @@ public class ConsumerClient {
 	
 	@Autowired
 	private PostRouterService postRouterService;
+	
+	@Autowired
+	private RemoteRouterService remoteRouterService;
 	
 	@Value("${probe.message.ons.consumerid}")
 	private String consumerId;
@@ -147,12 +151,17 @@ public class ConsumerClient {
 		String nonce = String.valueOf(random.nextInt(1000));
 		String token = postRouterService.getToken(message.getTag());
 		
+		nvps.add(new BasicNameValuePair("version", "1.0"));
 		nvps.add(new BasicNameValuePair("method", "treebear.probedata.post"));
 		nvps.add(new BasicNameValuePair("timestamp",timestamp));
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
-		nvps.add(new BasicNameValuePair("probeSn", message.getKey()));
+		String probeSn = message.getKey();
+		nvps.add(new BasicNameValuePair("probeSn", probeSn));
+		String mac = remoteRouterService.getCachedRouterBySeq(probeSn).getMac();
+		nvps.add(new BasicNameValuePair("probeMac", mac));
+		
 		
 		return nvps;
 	}

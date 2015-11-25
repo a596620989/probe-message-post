@@ -24,6 +24,10 @@
 			<classifier>remoting</classifier>
 		</dependency>
 		<dependency>
+				<groupId>com.witown.portal</groupId>
+				<artifactId>portal-service-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.witown.probe</groupId>
 			<artifactId>probe-message-post-api</artifactId>
 		</dependency>

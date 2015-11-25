@@ -20,5 +20,6 @@
 	<dubbo:consumer version="1.0" group="default" cluster="failfast"/>
 
 	<dubbo:reference id="remotePostRouterService" interface="com.witown.remoting.service.RemotePostRouterService" />
+	<dubbo:reference id="remoteRouterService" interface="com.witown.portal.service.RemoteRouterService"/>
 </beans>
 

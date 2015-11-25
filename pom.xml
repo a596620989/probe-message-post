@@ -41,6 +41,17 @@
 				<classifier>remoting</classifier>
 			</dependency>
 			<dependency>
+				<groupId>com.witown.portal</groupId>
+				<artifactId>portal-service-api</artifactId>
+				<version>2.9.2</version>
+                <exclusions>
+                    <exclusion><!-- witown-biz do not need two version of javax.servlet-api.jar.set portal-generic-monitor version to 1.0-SNAPSHOT or add below code can solve unit test problem  -->
+                        <groupId>javax.servlet</groupId>
+            			<artifactId>javax.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+			<dependency>
 				<groupId>com.witown.probe</groupId>
 				<artifactId>probe-message-post-api</artifactId>
 				<version>1.1-SNAPSHOT</version>
