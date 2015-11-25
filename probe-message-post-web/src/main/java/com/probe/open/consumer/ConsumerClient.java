@@ -34,6 +34,7 @@ import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.PropertyValueConst;
 import com.probe.open.service.PostRouterService;
+import com.witown.portal.domain.Router;
 import com.witown.portal.service.RemoteRouterService;
 
 /**
@@ -103,8 +104,10 @@ public class ConsumerClient {
 //		http://hc.apache.org/httpcomponents-client-ga/tutorial/html/fundamentals.html#d5e49
 		String routerAddress = postRouterService.getAddress(probeSn);
 		if(routerAddress == null){
+			logger.warn("routerAddress is null");
 			return;
 		}
+		logger.info("routerAddress :" + routerAddress);
 		HttpPost httpPost = new HttpPost(routerAddress);
 		List<NameValuePair> nvps = buildPostFormEntity(message); 
 		
@@ -127,7 +130,7 @@ public class ConsumerClient {
 		}
 
 		try {
-			logger.debug(response.getStatusLine().toString());
+			logger.info(response.getStatusLine().toString());
 			HttpEntity entity = response.getEntity();
 			logger.debug("response:" + EntityUtils.toString(entity));
 			// do something useful with the response body
@@ -145,6 +148,7 @@ public class ConsumerClient {
 	}
 	
 	private List<NameValuePair> buildPostFormEntity(Message message){
+		logger.info("building post request start");
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		String timestamp = String.valueOf(System.currentTimeMillis());
 		Random random = new Random();
@@ -157,11 +161,17 @@ public class ConsumerClient {
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
-		String probeSn = message.getKey();
+		String probeSn = message.getTag();
 		nvps.add(new BasicNameValuePair("probeSn", probeSn));
-		String mac = remoteRouterService.getCachedRouterBySeq(probeSn).getMac();
+		Router router = remoteRouterService.getCachedRouterBySeq(probeSn);
+		String mac = null;
+		if (router != null){
+			mac = router.getMac();
+		}
 		nvps.add(new BasicNameValuePair("probeMac", mac));
 		
+		
+		logger.info("building post request end");
 		
 		return nvps;
 	}
