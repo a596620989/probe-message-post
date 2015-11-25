@@ -1,2 +1,0 @@
-dubbo.registry.address=${dubbo_registry_address}
-dubbo.protocol.port=${dubbo_protocol_port}

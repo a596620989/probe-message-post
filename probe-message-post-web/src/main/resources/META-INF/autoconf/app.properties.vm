@@ -1,4 +1,0 @@
-probe.message.ons.consumerid=${probe_message_ons_consumerid}
-probe.message.ons.accesskey=${probe_message_ons_accesskey}
-probe.message.ons.secretkey=${probe_message_ons_secretkey}
-probe.message.ons.topic=${probe_message_ons_topic}
