@@ -163,7 +163,7 @@ public class ConsumerClient {
 		nvps.add(new BasicNameValuePair("nonce", nonce));
 		logger.info("postform.signature:" + sign(timestamp,nonce,token));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
-		logger.info("postform.message:" + message.getBody());
+		logger.info("postform.message:" + new String(message.getBody()));
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
 		String probeSn = message.getTag();
 		logger.info("postform.probeSn:" + probeSn);
