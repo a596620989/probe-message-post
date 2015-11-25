@@ -46,7 +46,7 @@
 
 ### 第三方如何测试?
 
-1. 访问http://wifitest2.witown.com:10808/api/debug.htm
+1. 访问http://postdebug.probe.witown.com:10808/api/debug.htm
 2. 选择要调试的方法, 按要求填入url, toke等参数
 3. 之后树熊会向第三方提供的url中发送post请求
 	
@@ -100,6 +100,4 @@
 
 ## TODO
 1. svr_probe2
-2. probe.log 分离
-3. post重试可以依赖ons自身的重试机制
-4. 开发一套第三方的调试界面 -> done
+2. post重试可以依赖ons自身的重试机制
