@@ -157,19 +157,24 @@ public class ConsumerClient {
 		
 		nvps.add(new BasicNameValuePair("version", "1.0"));
 		nvps.add(new BasicNameValuePair("method", "treebear.probedata.post"));
+		logger.info("postform.timestamp:" + timestamp);
 		nvps.add(new BasicNameValuePair("timestamp",timestamp));
+		logger.info("postform.nonce:" + nonce);
 		nvps.add(new BasicNameValuePair("nonce", nonce));
+		logger.info("postform.signature:" + sign(timestamp,nonce,token));
 		nvps.add(new BasicNameValuePair("signature", sign(timestamp,nonce,token)));
+		logger.info("postform.message:" + message.getBody());
 		nvps.add(new BasicNameValuePair("probeData", new String(message.getBody())));
 		String probeSn = message.getTag();
+		logger.info("postform.probeSn:" + probeSn);
 		nvps.add(new BasicNameValuePair("probeSn", probeSn));
 		Router router = remoteRouterService.getCachedRouterBySeq(probeSn);
 		String mac = null;
 		if (router != null){
 			mac = router.getMac();
 		}
+		logger.info("postform.mac:" + mac);
 		nvps.add(new BasicNameValuePair("probeMac", mac));
-		
 		
 		logger.info("building post request end");
 		
